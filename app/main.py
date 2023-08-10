@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile
 from pypdf import PdfReader
 import numpy as np
 import openai
+import os
 import aiofiles
 from qdrant_client.http import models
 from qdrant_client import QdrantClient
@@ -112,3 +113,8 @@ async def search_cv(file: UploadFile = File(...)):
     text = page.extract_text()
     embedding = embed_vectors(str(text))
     return search(embedding)
+
+if __name__ == "__main__":
+    import uvicorn
+    server_port = int(os.environ.get('PORT', 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=server_port, log_level="info")
